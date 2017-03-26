@@ -1,4 +1,6 @@
 import processing.sound.*;
+import ddf.minim.*;
+
 PFont font_DINBold30;
 PFont font_DINBold48;
 PFont font_DINBlack48;
@@ -16,6 +18,11 @@ PImage pic_thankyou;
 
 SoundFile sound;
 
+Minim minim;
+AudioInput in;
+AudioRecorder recorder;
+int countname; //change the audio name
+int name = 000000; //set the number in key's' function
 
 int i = 0; // step counter
 
@@ -28,7 +35,7 @@ int c1_parent; // character1 - parent quiz points
 int c2_friend; // character2 - friend quiz points
 int c3_lover;  // character3 - lover quiz points
 
-
+String charactorname;
 
 int k = 0; // quiz result (decide which character's video to be displayed)
 
@@ -46,15 +53,33 @@ int time_used_b4keypress = 0;     //used time before key pressed
 int time_used_afterkeypress = 0; //used time after key pressed
 int time_limit_whole = 2*60000; // whole time limit 5 minutes
 
-
+void newFile()
+{      
+ countname =(name + 1);
+ recorder = minim.createRecorder(in, "VoiceRecord_user" + countname + "_" + charactorname + ".wav", true);
+ // println("file/" + countname + ".wav");
+}
 
 
 void setup() {
   frameRate(30);
-  
+ 
   //-----Background setup-----//
-  size(1440, 900); //size for real booth
+  size(1440, 900,P2D); //size for real booth
   //size(1440,840); //size for competition
+  
+  //------Audio Recoding Setup-----//
+   minim = new Minim(this);
+
+ // get a stereo line-in: sample buffer length of 2048
+ // default sample rate is 44100, default bit depth is 16
+ in = minim.getLineIn(Minim.STEREO, 2048);
+ // create a recorder that  will record from the input to the filename specified, using buffered recording
+ // buffered recording means that all captured audio will be written into a sample buffer
+ // then when save() is called, the contents of the buffer will actually be written to a file
+ // the file will be located in the sketch's root folder.
+ 
+   newFile();//go to change file name
   
 //-----Picture Loading-----//
     pic_logo = loadImage("pic_logo.jpg");
@@ -84,8 +109,6 @@ void setup() {
 
 
 
-
-
 void draw() {
   
   //If there is no input for 5 minutes, the system will restart.
@@ -95,12 +118,12 @@ void draw() {
     i = 0;
     }
   
+
   
-  //imageMode(CENTER);
-  //-----Firsrt image-----//
+//-----Firsrt image-----//
   
   if  (i == 0) {
-   
+   recorder.endRecord();
    sound.stop();
 
    j1 = 0; 
@@ -113,23 +136,34 @@ void draw() {
    
    background(255,255,255);
    noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
    fill(218,41,28);
-   rect(0, 0, 1440, 60);
-   rect(0, 0, 60, 820);
-   rect(1380, 0, 60, 820);
-   rect(0, 780, 1440, 60);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
   
-   image(pic_logo,115,60); 
+   image(pic_logo,115,90); 
    textFont(font_DINBold30);
    fill(0, 0, 0);
    textAlign(LEFT);
-   text("Press '#' to start",1100,740);
+   text("Press '#' to start",1100,770);
   }
   
   
   if  (i == 1) {
     background(255,255,255);
-    image(pic_StartScreen,0,0,1440,840);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
+    
+    image(pic_StartScreen,0,30,1440,840);
   }
 
 //-----quiz------//
@@ -153,13 +187,18 @@ void draw() {
 //-----quiz1-----// 
   if  (i == 2) {
   sound.stop();
-  background(255,255,255);
-  noStroke();
-  fill(218,41,28);
-  rect(0, 0, 1440, 60);
-  rect(0, 0, 60, 820);
-  rect(1380, 0, 60, 820);
-  rect(0, 780, 1440, 60);
+   background(255,255,255);
+   noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
+   fill(218,41,28);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
    
    //question
    textFont(font_DINBold48);
@@ -192,7 +231,7 @@ void draw() {
      textFont(font_DINBold30);
      fill(0, 0, 0);
      textAlign(LEFT);
-     text("Press '#' to continue",1070,740);
+     text("Press '#' to continue",1070,770);
      //image(pic_q1,2/width,2/height);
    }
    
@@ -201,13 +240,18 @@ void draw() {
 //-----quiz2-----// 
   if  (i == 3) {
    //image(pic_q2,2/width,2/height);
-  background(255,255,255);
-  noStroke();
-  fill(218,41,28);
-  rect(0, 0, 1440, 60);
-  rect(0, 0, 60, 820);
-  rect(1380, 0, 60, 820);
-  rect(0, 780, 1440, 60);
+   background(255,255,255);
+   noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
+   fill(218,41,28);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
    
    //question
    textFont(font_DINBold48);
@@ -240,7 +284,7 @@ void draw() {
      textFont(font_DINBold30);
      fill(0, 0, 0);
      textAlign(LEFT);
-     text("Press '#' to continue",1070,740);
+     text("Press '#' to continue",1070,770);
      //image(pic_q1,2/width,2/height);
    }
   }
@@ -248,13 +292,18 @@ void draw() {
 //-----quiz3-----// 
   if  (i == 4) {
    //image(pic_q3,2/width,2/height);
-  background(255,255,255);
-  noStroke();
-  fill(218,41,28);
-  rect(0, 0, 1440, 60);
-  rect(0, 0, 60, 820);
-  rect(1380, 0, 60, 820);
-  rect(0, 780, 1440, 60);
+   background(255,255,255);
+   noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
+   fill(218,41,28);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
    
    //question
    textFont(font_DINBold48);
@@ -287,7 +336,7 @@ void draw() {
      textFont(font_DINBold30);
      fill(0, 0, 0);
      textAlign(LEFT);
-     text("Press '#' to continue",1070,740);
+     text("Press '#' to continue",1070,770);
      //image(pic_q1,2/width,2/height);
    }
   }
@@ -296,12 +345,17 @@ void draw() {
   if  (i == 5) {
    //image(pic_q4,2/width,2/height);
   background(255,255,255);
-  noStroke();
-  fill(218,41,28);
-  rect(0, 0, 1440, 60);
-  rect(0, 0, 60, 820);
-  rect(1380, 0, 60, 820);
-  rect(0, 780, 1440, 60);
+   noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
+   fill(218,41,28);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
  
    //question
    textFont(font_DINBold48);
@@ -342,7 +396,7 @@ void draw() {
     textFont(font_DINBold30);
     fill(0, 0, 0);
     textAlign(LEFT);
-    text("Press '#' to continue",1070,740);
+    text("Press '#' to continue",1070,770);
      //image(pic_q1,2/width,2/height);
    }
   }
@@ -397,20 +451,27 @@ void draw() {
   
   
   if  (i == 6) {
-    if (k == 1){
+    
     background(255,255,255);
-    image(pic_ParentResult,0,0,1440,840);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
+    
+    if (k == 1){
+    image(pic_ParentResult,0,30,1440,840);
+    charactorname = "parent";
     }
 
     if (k == 2){
-    background(255,255,255);
-    image(pic_FriendResult,0,0,1440,840);
-
+    image(pic_FriendResult,0,30,1440,840);
+    charactorname = "friend";
     }
    
    if  (k == 3) {
-    background(255,255,255);
-    image(pic_LoverResult,0,0,1440,840);
+    image(pic_LoverResult,0,30,1440,840);
+    charactorname = "lover";
     }
   }
 
@@ -419,19 +480,23 @@ void draw() {
   
   
   if  (i == 7) {
-    if (k == 1){
     background(255,255,255);
-    image(pic_ParentLines,0,0,1440,840);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
+   
+    if (k == 1){
+    image(pic_ParentLines,0,30,1440,840);
     }
     
      if (k == 2){
-    background(255,255,255);
-    image(pic_FriendLines,0,0,1440,840);
+    image(pic_FriendLines,0,30,1440,840);
     }
     
      if (k == 3){
-    background(255,255,255);
-    image(pic_LoverLines,0,0,1440,840);
+    image(pic_LoverLines,0,30,1440,840);
     }
      //save the used time before play the video;
    time_used_b4line1 = millis();
@@ -440,33 +505,23 @@ void draw() {
 //-----show the line1-----//  
   //step 8: show the line1
   if  (i == 8) {
-    if (k == 1){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
+    background(255,255,255);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
+    
+         
      textFont(font_DINBold48);
      fill(0, 0, 0);
      textAlign(CENTER);
-     text("Line 1 of 3",160,170,1120,150);
+     text("Line 1 of 3",160,200,1120,150);
      
-    // textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 1",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Sam? Sam is that you? Are you cancelling on me again? It’s 9:10 and you aren’t here!!",160,360,1120,250);
-  
      textFont(font_DINBold30);
      fill(0, 0, 0);
      textAlign(LEFT);
-     text("Press '#' to Line 2",1070,740);
+     text("Press '#' to Line 2",1070,770);
      
      //time count down
      time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line1);
@@ -476,138 +531,51 @@ void draw() {
      textFont(font_DINBold48);
      textAlign(CENTER);
      fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
+     text("Time Left "+time_left_min+":"+time_left_sec,160,730,1120,150);
      
      time_used_b4line2 = millis();
      
      if (time_left_min == 0 && time_left_sec ==0){
       i = 9;
      }     
+    
+    textAlign(CENTER);
+    textFont(font_DINBlack48);
+    if (k == 1){
+     text("Sam? Sam is that you? Are you cancelling on me again? It’s 9:10 and you aren’t here!!",160,390,1120,250); 
     }
     
-     if (k == 2){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 1 of 3",160,170,1120,150);
-     
-     //textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 1",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Ayyyyyy you idiot, when’re you getting to the party?",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Line 2",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line1);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     time_used_b4line2 = millis();
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 9;
-     }   
+     if (k == 2){  
+     text("Ayyyyyy you idiot, when’re you getting to the party?",160,390,1120,250); 
     }
     
      if (k == 3){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 1 of 3",160,170,1120,150);
-     
-    // textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 1",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Hey hey hot stuff I’m at your place but I think the buzzer isn’t working - let me up?",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Line 2",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line1);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     time_used_b4line2 = millis();
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 9;
-     }   
+     text("Hey hey hot stuff I’m at your place but I think the buzzer isn’t working - let me up?",160,390,1120,250);  
     }
   }
 
 //-----show the line2-----//  
   //step 9: show the line2
   if  (i == 9) {
-    if (k == 1){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 2 of 3",160,170,1120,150);
-     
-    // textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 2",160,250,1120,150);
+    background(255,255,255);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
     
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Sam, I’ve told you so many times we were supposed to meet at 9 and it’s 9:10 what was I supposed to think…",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Line 3",1070,740);
-     
-     //time count down
+    textFont(font_DINBold48);
+    fill(0, 0, 0);
+    textAlign(CENTER);
+    text("Line 2 of 3",160,200,1120,150);
+    
+    
+    textFont(font_DINBold30);
+    fill(0, 0, 0);
+    textAlign(LEFT);
+    text("Press '#' to Line 3",1070,770);
+    
+    //time count down
      time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line2);
      time_left_min = (time_left_millis/(60*1000));
      time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
@@ -615,138 +583,51 @@ void draw() {
      textFont(font_DINBold48);
      textAlign(CENTER);
      fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
+     text("Time Left "+time_left_min+":"+time_left_sec,160,730,1120,150);
      
      time_used_b4line3 = millis();
      
      if (time_left_min == 0 && time_left_sec ==0){
       i = 10;
      }     
+    
+    textAlign(CENTER);
+    textFont(font_DINBlack48);
+    
+    if (k == 1){
+     text("Sam, I’ve told you so many times we were supposed to meet at 9 and it’s 9:10 what was I supposed to think…",160,390,1120,250);
     }
     
      if (k == 2){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 2 of 3",160,170,1120,150);
-     
-     //textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 2",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Oh come on man! You said you were going to help set up! We’ve got 3 kegs to get up the stairs and they aren’t going to carry themselves - you owe me for the move-in help remember?",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Line 3",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line2);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     time_used_b4line3 = millis();
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 10;
-     }   
+     text("Oh come on man! You said you were going to help set up! We’ve got 3 kegs to get up the stairs and they aren’t going to carry themselves - you owe me for the move-in help remember?",160,390,1120,250);
     }
     
      if (k == 3){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 2 of 3",160,170,1120,150);
-     
-     //textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 2",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Well we didn’t MAKE plans but I was thinking it might be nice to make some now y’know? I brought that thing we were talking about...",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Line 3",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line2);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     time_used_b4line3 = millis();
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 10;
-     }   
+     text("Well we didn’t MAKE plans but I was thinking it might be nice to make some now y’know? I brought that thing we were talking about...",160,390,1120,250);
     }
   }
 
 //-----show the line3-----//  
   //step 10: show the line3
   if  (i == 10) {
-    if (k == 1){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 3 of 3",160,170,1120,150);
-     
-    // textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 3",160,250,1120,150);
+    background(255,255,255);
+    noStroke();
+   
+    fill(0,0,0);
+    rect(0, 0, 1440, 30);
+    rect(0, 870, 1440, 30);
     
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("SAM it is 10:14! They’ve started to let people in and I just know we’re going to end up standing at the back again - are you close? I can’t save seats without the tickets you know.",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Finish",1070,740);
-     
-     //time count down
+    textFont(font_DINBold48);
+    fill(0, 0, 0);
+    textAlign(CENTER);
+    text("Line 3 of 3",160,200,1120,150);
+    
+    textFont(font_DINBold30);
+    fill(0, 0, 0);
+    textAlign(LEFT);
+    text("Press '#' to Finish",1070,770);
+    
+    //time count down
      time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line3);
      time_left_min = (time_left_millis/(60*1000));
      time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
@@ -754,119 +635,64 @@ void draw() {
      textFont(font_DINBold48);
      textAlign(CENTER);
      fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
+     text("Time Left "+time_left_min+":"+time_left_sec,160,730,1120,150);
      
      if (time_left_min == 0 && time_left_sec ==0){
       i = 11;
      }     
+     
+         
+    textAlign(CENTER);
+    textFont(font_DINBlack48);
+    
+    if (k == 1){
+     text("SAM it is 10:14! They’ve started to let people in and I just know we’re going to end up standing at the back again - are you close? I can’t save seats without the tickets you know.",160,390,1120,250); 
     }
     
      if (k == 2){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 3 of 3",160,170,1120,150);
-     
-     //textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 3",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("Whatever man; just hurry up ok? This is an important night for me.",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Finish",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line3);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 11;
-     }   
+     text("Whatever man; just hurry up ok? This is an important night for me.",160,390,1120,250);
     }
     
      if (k == 3){
-     background(255,255,255);
-     noStroke();
-     fill(218,41,28);
-     rect(0, 0, 1440, 60);
-     rect(0, 0, 60, 820);
-     rect(1380, 0, 60, 820);
-     rect(0, 780, 1440, 60);
-     
-     textFont(font_DINBold48);
-     fill(0, 0, 0);
-     textAlign(CENTER);
-     text("Line 3 of 3",160,170,1120,150);
-     
-     //textFont(font_DINBold48);
-     //fill(0, 0, 0);
-     //textAlign(LEFT);
-     //text("LINE 3",160,250,1120,150);
-    
-     textAlign(CENTER);
-     textFont(font_DINBlack48);
-     text("So are you going to have me up or not?",160,360,1120,250);
-  
-     textFont(font_DINBold30);
-     fill(0, 0, 0);
-     textAlign(LEFT);
-     text("Press '#' to Finish",1070,740);
-     
-     //time count down
-     time_left_millis = time_limit_line*60*1000 - (millis()-time_used_b4line3);
-     time_left_min = (time_left_millis/(60*1000));
-     time_left_sec = ((time_left_millis-time_left_min*60*1000)/(1000));
-     
-     textFont(font_DINBold48);
-     textAlign(CENTER);
-     fill(218,41,28);
-     text("Time Left "+time_left_min+":"+time_left_sec,160,700,1120,150);
-     
-     if (time_left_min == 0 && time_left_sec ==0){
-      i = 11;
-     }   
+     text("So are you going to have me up or not?",160,390,1120,250);
     }
   }  
-  
+
+
+   
 //-----thank you -----//  
   //step 11: show thank you 
    if  (i == 11) {
-   background(255,255,255);
+   
+    background(255,255,255);
    noStroke();
+   
+   fill(0,0,0);
+   rect(0, 0, 1440, 30);
+   rect(0, 870, 1440, 30);
+    
    fill(218,41,28);
-   rect(0, 0, 1440, 60);
-   rect(0, 0, 60, 820);
-   rect(1380, 0, 60, 820);
-   rect(0, 780, 1440, 60);
+   rect(0, 30, 1440, 60);
+   rect(0, 30, 60, 820);
+   rect(1380, 30, 60, 820);
+   rect(0, 810, 1440, 60);
   
-   image(pic_thankyou,115,60,1212,701); 
+   image(pic_thankyou,115,90,1212,701); 
    textFont(font_DINBold30);
    fill(0, 0, 0);
    textAlign(LEFT);
-   text("Press '*' to restart",1100,740);
+   text("Press '*' to restart",1100,770);
    }
    
+}
+
+void stop()
+{
+ // always close Minim audio classes when you are done with them
+ in.close();
+ minim.stop();
+ 
+ super.stop();
 }
 
 
@@ -1003,4 +829,17 @@ if (keyPressed == true) {
    //if (i == 5 && key == '3'){
     j4 = 3;
   }
+  
+  //----voice recording-----//
+  if (i==8 && key == '.'){
+   newFile();
+   recorder.beginRecord();
+   name++; //change the file name, everytime +1
+  }
+  
+   if (i==11 && key == '.'){
+   recorder.endRecord();
+   recorder.save();
+  }
+  
 }
